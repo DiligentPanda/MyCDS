@@ -122,6 +122,9 @@ class EpisodeRunner:
         cur_stats["n_episodes"] = 1 + cur_stats.get("n_episodes", 0)
         cur_stats["ep_length"] = self.t + cur_stats.get("ep_length", 0)
 
+        cur_stats.update(self.env.stats)
+
+
         if not test_mode:
             self.t_env += self.t
 

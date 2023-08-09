@@ -47,7 +47,7 @@ def _get_config(params, arg_name, subfolder):
     if config_name is not None:
         with open(os.path.join(os.path.dirname(__file__), "config", subfolder, "{}.yaml".format(config_name)), "r") as f:
             try:
-                config_dict = yaml.load(f)
+                config_dict = yaml.load(f, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:
                 assert False, "{}.yaml error: {}".format(config_name, exc)
         return config_dict
@@ -72,13 +72,15 @@ def config_copy(config):
 
 
 if __name__ == '__main__':
-    params = deepcopy(sys.argv)
+    # params = deepcopy(sys.argv)
+    params = ['main.py', '--config=CDS_QMIX', '--env-config=academy_3_vs_1_with_keeper']
+
     th.set_num_threads(16)
 
     # Get the defaults from default.yaml
     with open(os.path.join(os.path.dirname(__file__), "config", "default.yaml"), "r") as f:
         try:
-            config_dict = yaml.load(f)
+            config_dict = yaml.load(f, Loader=yaml.FullLoader)
         except yaml.YAMLError as exc:
             assert False, "default.yaml error: {}".format(exc)
 

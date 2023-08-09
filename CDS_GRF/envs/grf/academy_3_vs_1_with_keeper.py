@@ -3,6 +3,7 @@ import gfootball.env as football_env
 from gfootball.env import observation_preprocessing
 import gym
 import numpy as np
+from .encoder_basic import FeatureEncoder
 
 class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
 
@@ -35,6 +36,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         self.episode_limit = time_limit
         self.time_step = time_step
         self.obs_dim = obs_dim
+        self.state_dim = 26
         self.env_name = env_name
         self.stacked = stacked
         self.representation = representation
@@ -73,7 +75,10 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
 
         self.unit_dim = self.obs_dim  # QPLEX unit_dim  for cds_gfootball
         # self.unit_dim = 6  # QPLEX unit_dim set as that in Starcraft II
-
+        self.fe = FeatureEncoder(
+            num_players=6,
+        )
+        self.sum_r = 0
 
 
     def get_simple_obs(self, index=-1):
@@ -95,24 +100,29 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
 
         else:
             # local state, relative position
-            ego_position = full_obs['left_team'][-self.n_agents +
-                                                 index].reshape(-1)
-            simple_obs.append(ego_position)
-            simple_obs.append((np.delete(
-                full_obs['left_team'][-self.n_agents:], index, axis=0) - ego_position).reshape(-1))
-
-            simple_obs.append(
-                full_obs['left_team_direction'][-self.n_agents + index].reshape(-1))
-            simple_obs.append(np.delete(
-                full_obs['left_team_direction'][-self.n_agents:], index, axis=0).reshape(-1))
-
-            simple_obs.append(
-                (full_obs['right_team'] - ego_position).reshape(-1))
-            simple_obs.append(full_obs['right_team_direction'].reshape(-1))
-
-            simple_obs.append(full_obs['ball'][:2] - ego_position)
-            simple_obs.append(full_obs['ball'][-1].reshape(-1))
-            simple_obs.append(full_obs['ball_direction'])
+            encoded_obs = self.fe.encode_each(self.env.unwrapped.observation()[index],
+                                              [])
+            return encoded_obs
+            #
+            #
+            # ego_position = full_obs['left_team'][-self.n_agents +
+            #                                      index].reshape(-1)
+            # simple_obs.append(ego_position)
+            # simple_obs.append((np.delete(
+            #     full_obs['left_team'][-self.n_agents:], index, axis=0) - ego_position).reshape(-1))
+            #
+            # simple_obs.append(
+            #     full_obs['left_team_direction'][-self.n_agents + index].reshape(-1))
+            # simple_obs.append(np.delete(
+            #     full_obs['left_team_direction'][-self.n_agents:], index, axis=0).reshape(-1))
+            #
+            # simple_obs.append(
+            #     (full_obs['right_team'] - ego_position).reshape(-1))
+            # simple_obs.append(full_obs['right_team_direction'].reshape(-1))
+            #
+            # simple_obs.append(full_obs['ball'][:2] - ego_position)
+            # simple_obs.append(full_obs['ball'][-1].reshape(-1))
+            # simple_obs.append(full_obs['ball_direction'])
 
         simple_obs = np.concatenate(simple_obs)
         return simple_obs
@@ -135,12 +145,14 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         self.time_step += 1
         _, original_rewards, done, infos = self.env.step(actions.to('cpu').numpy().tolist())
         rewards = list(original_rewards)
+        self.sum_r += sum(original_rewards)
         # obs = np.array([self.get_obs(i) for i in range(self.n_agents)])
 
         if self.time_step >= self.episode_limit:
             done = True
 
         if self.check_if_done():
+            self.get_stats()
             done = True
 
         if sum(rewards) <= 0:
@@ -149,6 +161,17 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
 
         # return obs, self.get_global_state(), 100, done, infos
         return 100, done, infos
+
+    def get_stats(self):
+        state = self.env.unwrapped.observation()[0]
+        score = state['score']
+        win = int(score[0] > score[1])
+        my_goal = score[0]
+        lose_goal = score[1]
+        goal_diff = score[0]-score[1]
+        self.stats = {'win': win, 'my_goal': my_goal, "lose_goal": lose_goal,
+                      'goal_diff': goal_diff, "sum_r": self.sum_r}
+
 
     def get_obs(self):
         """Returns all agent observations in a list."""
@@ -171,7 +194,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
     def get_state_size(self):
         """Returns the size of the global state."""
         # TODO: in wrapper_grf_3vs1.py, author set state_shape=obs_shape
-        return self.obs_dim
+        return self.state_dim
 
     def get_avail_actions(self):
         """Returns the available actions of all agents in a list."""
@@ -190,6 +213,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         self.time_step = 0
         self.env.reset()
         obs = np.array([self.get_simple_obs(i) for i in range(self.n_agents)])
+        self.sum_r = 0
 
         return obs, self.get_global_state()
 

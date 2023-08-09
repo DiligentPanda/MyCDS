@@ -9,13 +9,13 @@ env_args:
   n_agents: 3
   time_limit: 150
   time_step: 0
-  obs_dim: 26
+  obs_dim: 105
   env_name: "academy_3_vs_1_with_keeper"
   stacked: False
   representation: "simple115"
-  rewards: "scoring"
+  rewards: "scoring,checkpoints"
   logdir: "football_dumps"
-  write_video: True
+  write_video: False
   number_of_right_players_agent_controls: 0
   seed: 0
 
