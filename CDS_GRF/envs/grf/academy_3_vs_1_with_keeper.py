@@ -151,16 +151,13 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         if self.time_step >= self.episode_limit:
             done = True
 
-        # if self.check_if_done():
-        #     self.get_stats()
-        #     done = True
+
+        if done:
+            self.get_stats()
 
         if sum(rewards) <= 0:
             # return obs, self.get_global_state(), -int(done), done, infos
             return -int(done), done, infos
-
-        if done:
-            self.get_stats()
 
         # return obs, self.get_global_state(), 100, done, infos
         return 100, done, infos

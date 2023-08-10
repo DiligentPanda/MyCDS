@@ -24,6 +24,7 @@ class EpisodeRunner:
         self.test_returns = []
         self.train_stats = {}
         self.test_stats = {}
+        self.record_stats = {}
 
         # Log the first run
         self.log_train_stats_t = -1000000
@@ -122,7 +123,13 @@ class EpisodeRunner:
         cur_stats["n_episodes"] = 1 + cur_stats.get("n_episodes", 0)
         cur_stats["ep_length"] = self.t + cur_stats.get("ep_length", 0)
 
-        cur_stats.update(self.env.stats)
+        for k,v in self.env.stats.items():
+            if k not in self.record_stats:
+                self.record_stats[k]=v
+            else:
+                self.record_stats[k]+=v
+
+        cur_stats.update(self.record_stats)
 
 
         if not test_mode:
