@@ -79,7 +79,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
             num_players=6,
         )
         self.sum_r = 0
-
+        self.stats = {}
 
     def get_simple_obs(self, index=-1):
         full_obs = self.env.unwrapped.observation()[0]
@@ -135,8 +135,8 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         ball_loc = cur_obs['ball']
         ours_loc = cur_obs['left_team'][-self.n_agents:]
 
-        if ball_loc[0] < 0 or any(ours_loc[:, 0] < 0):
-            return True
+        # if ball_loc[0] < 0 or any(ours_loc[:, 0] < 0):
+        #     return True
 
         return False
 
@@ -151,13 +151,16 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         if self.time_step >= self.episode_limit:
             done = True
 
-        if self.check_if_done():
-            self.get_stats()
-            done = True
+        # if self.check_if_done():
+        #     self.get_stats()
+        #     done = True
 
         if sum(rewards) <= 0:
             # return obs, self.get_global_state(), -int(done), done, infos
             return -int(done), done, infos
+
+        if done:
+            self.get_stats()
 
         # return obs, self.get_global_state(), 100, done, infos
         return 100, done, infos
@@ -198,7 +201,11 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
 
     def get_avail_actions(self):
         """Returns the available actions of all agents in a list."""
-        return [[1 for _ in range(self.n_actions)] for agent_id in range(self.n_agents)]
+
+        encoded_obs = self.get_obs()
+        action_masks = [list(i[:19]) for i in encoded_obs]
+        return action_masks
+        # return [[1 for _ in range(self.n_actions)] for agent_id in range(self.n_agents)]
 
     def get_avail_agent_actions(self, agent_id):
         """Returns the available actions for agent_id."""
