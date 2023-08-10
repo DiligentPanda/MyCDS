@@ -9,7 +9,7 @@ env_args:
   n_agents: 4
   time_limit: 150
   time_step: 0
-  obs_dim: 34
+  obs_dim: 217
   env_name: "academy_counterattack_hard"
   stacked: False
   representation: "simple115"
