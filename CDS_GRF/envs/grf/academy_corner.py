@@ -84,7 +84,7 @@ class Academy_Corner(MultiAgentEnv):
         self.unit_dim = self.obs_dim  # QPLEX unit_dim  for cds_gfootball
         # self.unit_dim = 6  # QPLEX unit_dim set as that in Starcraft II
         self.fe = FeatureEncoder(
-            num_players=6,
+            num_players=22,
         )
         self.sum_r = 0
         self.stats = {}

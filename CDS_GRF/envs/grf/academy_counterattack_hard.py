@@ -78,7 +78,7 @@ class Academy_Counterattack_Hard(MultiAgentEnv):
         # self.unit_dim = 8  # QPLEX unit_dim set like that in Starcraft II
 
         self.fe = FeatureEncoder(
-            num_players=6,
+            num_players=22,
         )
         self.sum_r = 0
         self.stats = {}

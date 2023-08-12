@@ -31,7 +31,7 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         self.write_full_episode_dumps = write_full_episode_dumps
         self.write_goal_dumps = write_goal_dumps
         self.dump_freq = dump_freq
-        self.render = render
+        self.render = True
         self.n_agents = n_agents
         self.episode_limit = time_limit
         self.time_step = time_step
@@ -76,7 +76,7 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         self.unit_dim = self.obs_dim  # QPLEX unit_dim  for cds_gfootball
         # self.unit_dim = 6  # QPLEX unit_dim set as that in Starcraft II
         self.fe = FeatureEncoder(
-            num_players=6,
+            num_players=22,
         )
         self.sum_r = 0
         self.stats = {}
@@ -157,13 +157,13 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         if done:
             self.get_stats()
 
-        if sum(rewards) <= 0:
+        # if sum(rewards) <= 0:
             # return obs, self.get_global_state(), -int(done), done, infos
-            return -int(done), done, infos
+            # return -int(done), done, infos
 
 
         # return obs, self.get_global_state(), 100, done, infos
-        return 100, done, infos
+        return sum(rewards), done, infos
 
     def get_stats(self):
         state = self.env.unwrapped.observation()[0]
