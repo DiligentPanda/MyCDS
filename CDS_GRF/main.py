@@ -72,8 +72,8 @@ def config_copy(config):
 
 
 if __name__ == '__main__':
-    params = deepcopy(sys.argv)
-    # params = ['main.py', '--config=CDS_QMIX', '--env-config=academy_run_pass_and_shoot']
+    # params = deepcopy(sys.argv)
+    params = ['main.py', '--config=CDS_QMIX', '--env-config=academy_run_pass_and_shoot']
 
     th.set_num_threads(16)
 
