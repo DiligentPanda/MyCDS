@@ -6,8 +6,8 @@ env_args:
   write_goal_dumps: False
   dump_freq: 1000
   render: False
-  n_agents: 4
-  time_limit: 150
+  n_agents: 11
+  time_limit: 300
   time_step: 0
   obs_dim: 217
   env_name: "academy_counterattack_easy"
