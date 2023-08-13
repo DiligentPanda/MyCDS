@@ -212,16 +212,20 @@ def run_sequential(args, logger):
                             episode_sample = buffer.on_policy_sample(
                                 args.on_policy_batch)
                         else:
-                            episode_sample = buffer.sample(args.batch_size)
+                            if buffer.on_policy_can_sample(args.batch_size):
+                                episode_sample = buffer.sample(args.batch_size)
+                            else:
+                                episode_sample = None
 
-                        max_ep_t = episode_sample.max_t_filled()
-                        episode_sample = episode_sample[:, :max_ep_t]
+                        if episode_sample is not None:
+                            max_ep_t = episode_sample.max_t_filled()
+                            episode_sample = episode_sample[:, :max_ep_t]
 
-                        if episode_sample.device != args.device:
-                            episode_sample.to(args.device)
+                            if episode_sample.device != args.device:
+                                episode_sample.to(args.device)
 
-                        learner.train_predict(episode_sample, runner.t_env)
-                        on_policy_episode = episode
+                            learner.train_predict(episode_sample, runner.t_env)
+                            on_policy_episode = episode
 
         # Execute test runs once in a while
         n_test_runs = max(1, args.test_nepisode // runner.batch_size)

@@ -31,7 +31,7 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         self.write_full_episode_dumps = write_full_episode_dumps
         self.write_goal_dumps = write_goal_dumps
         self.dump_freq = dump_freq
-        self.render = True
+        self.render = False
         self.n_agents = n_agents
         self.episode_limit = time_limit
         self.time_step = time_step
