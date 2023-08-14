@@ -135,8 +135,8 @@ class Academy_pass_and_shoot(MultiAgentEnv):
         ball_loc = cur_obs['ball']
         ours_loc = cur_obs['left_team'][-self.n_agents:]
 
-        # if ball_loc[0] < 0 or any(ours_loc[:, 0] < 0):
-        #     return True
+        if ball_loc[0] < 0 or any(ours_loc[:, 0] < 0):
+            return True
 
         return False
 
@@ -150,10 +150,9 @@ class Academy_pass_and_shoot(MultiAgentEnv):
 
         if self.time_step >= self.episode_limit:
             done = True
+        if self.check_if_done():
+            done = True
 
-        # if self.check_if_done():
-        #     self.get_stats()
-        #     done = True
         if done:
             self.get_stats()
 

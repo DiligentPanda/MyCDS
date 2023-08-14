@@ -143,8 +143,8 @@ class Academy_Corner(MultiAgentEnv):
         ball_loc = cur_obs['ball']
         ours_loc = cur_obs['left_team'][-self.n_agents:]
 
-        # if ball_loc[0] < 0 or any(ours_loc[:, 0] < 0):
-        #     return True
+        if ball_loc[0] < 0:     #if ball is in our half
+            return True
 
         return False
 
@@ -157,6 +157,8 @@ class Academy_Corner(MultiAgentEnv):
         # obs = np.array([self.get_obs(i) for i in range(self.n_agents)])
 
         if self.time_step >= self.episode_limit:
+            done = True
+        if self.check_if_done():
             done = True
 
         if done:
