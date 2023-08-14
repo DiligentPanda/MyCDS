@@ -5,7 +5,7 @@ import gym
 import numpy as np
 from .encoder_basic import FeatureEncoder
 
-class Academy_run_pass_and_shoot(MultiAgentEnv):
+class Academy_pass_and_shoot(MultiAgentEnv):
 
     def __init__(
         self,
@@ -18,7 +18,7 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         time_limit=150,
         time_step=0,
         obs_dim=26,
-        env_name='academy_run_pass_and_shoot_with_keeper',
+        env_name='academy_pass_and_shoot_with_keeper',
         stacked=False,
         representation="simple115",
         rewards='scoring',
