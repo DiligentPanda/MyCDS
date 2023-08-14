@@ -157,13 +157,13 @@ class Academy_run_pass_and_shoot(MultiAgentEnv):
         if done:
             self.get_stats()
 
-        # if sum(rewards) <= 0:
+        if sum(rewards) <= 0:
             # return obs, self.get_global_state(), -int(done), done, infos
-            # return -int(done), done, infos
+            return -int(done), done, infos
 
 
         # return obs, self.get_global_state(), 100, done, infos
-        return sum(rewards), done, infos
+        return 100, done, infos
 
     def get_stats(self):
         state = self.env.unwrapped.observation()[0]
