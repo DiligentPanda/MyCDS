@@ -6,7 +6,7 @@ import numpy as np
 from .encoder_basic import FeatureEncoder
 
 
-class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
+class Academy_run_pass_and_shoot_with_keeper(MultiAgentEnv):
 
     def __init__(
         self,
@@ -19,7 +19,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         time_limit=150,
         time_step=0,
         obs_dim=26,
-        env_name='academy_3_vs_1_with_keeper',
+        env_name='academy_run_pass_and_pass_with_keeper',
         stacked=False,
         representation="simple115",
         rewards='scoring',
@@ -76,7 +76,7 @@ class Academy_3_vs_1_with_Keeper(MultiAgentEnv):
         self.unit_dim = self.obs_dim  # QPLEX unit_dim  for cds_gfootball
         # self.unit_dim = 6  # QPLEX unit_dim set as that in Starcraft II
         self.fe = FeatureEncoder(
-            num_players=6,
+            num_players=5,
         )
 
 

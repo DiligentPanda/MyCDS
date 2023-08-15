@@ -1,2 +1,6 @@
 from .academy_3_vs_1_with_keeper import Academy_3_vs_1_with_Keeper
 from .academy_counterattack_hard import Academy_Counterattack_Hard
+from .academy_pass_and_shoot_with_keeper import Academy_pass_and_shoot_with_keeper
+from .academy_run_pass_and_shoot_with_keeper import Academy_run_pass_and_shoot_with_keeper
+from .academy_counterattack_easy import Academy_Counterattack_Easy
+from .academy_corner import Academy_Corner

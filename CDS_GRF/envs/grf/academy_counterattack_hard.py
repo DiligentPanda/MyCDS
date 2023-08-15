@@ -3,6 +3,7 @@ import gfootball.env as football_env
 from gfootball.env import observation_preprocessing
 import gym
 import numpy as np
+from .encoder_basic import FeatureEncoder
 
 
 class Academy_Counterattack_Hard(MultiAgentEnv):
@@ -74,6 +75,10 @@ class Academy_Counterattack_Hard(MultiAgentEnv):
 
         self.unit_dim = self.obs_dim  # QPLEX unit_dim for cds_gfootball
         # self.unit_dim = 8  # QPLEX unit_dim set like that in Starcraft II
+        self.fe = FeatureEncoder(
+            num_players=22,
+        )
+
 
     def get_simple_obs(self, index=-1):
         full_obs = self.env.unwrapped.observation()[0]
@@ -182,7 +187,14 @@ class Academy_Counterattack_Hard(MultiAgentEnv):
 
     def get_avail_actions(self):
         """Returns the available actions of all agents in a list."""
-        return [[1 for _ in range(self.n_actions)] for agent_id in range(self.n_agents)]
+        def _get_simple_obs(index):
+            encoded_obs = self.fe.encode_each(self.env.unwrapped.observation()[index],
+                                              [])
+            return encoded_obs
+
+        encoded_obs = [_get_simple_obs(i) for i in range(self.n_agents)]
+        action_masks = [list(i[:19]) for i in encoded_obs]
+        return action_masks
 
     def get_avail_agent_actions(self, agent_id):
         """Returns the available actions for agent_id."""

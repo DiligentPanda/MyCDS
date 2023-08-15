@@ -1,4 +1,4 @@
-env: academy_3_vs_1_with_keeper # google research football
+env: academy_run_pass_and_shoot_with_keeper # google research football
 
 env_args:
   dense_reward: False
@@ -6,11 +6,11 @@ env_args:
   write_goal_dumps: False
   dump_freq: 1000
   render: False
-  n_agents: 3
+  n_agents: 2
   time_limit: 150
   time_step: 0
-  obs_dim: 26
-  env_name: "academy_3_vs_1_with_keeper"
+  obs_dim: 22
+  env_name: "academy_run_pass_and_shoot_with_keeper"
   stacked: False
   representation: "simple115"
   rewards: "scoring"
