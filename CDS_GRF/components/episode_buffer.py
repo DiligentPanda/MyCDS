@@ -110,7 +110,11 @@ class EpisodeBatch:
 
             dtype = self.scheme[k].get("dtype", th.float32)
             v = th.tensor(v, dtype=dtype, device=self.device)
-            self._check_safe_view(v, target[k][_slices])
+            try:
+                self._check_safe_view(v, target[k][_slices])
+            except:
+                print(target[k].shape,_slices)
+                exit(-1)
             target[k][_slices] = v.view_as(target[k][_slices])
 
             if k in self.preprocess:
@@ -250,7 +254,7 @@ class ReplayBuffer(EpisodeBatch):
         return self.episodes_in_buffer >= self.burn_in_period and self.episodes_in_buffer >= batch_size
 
     def on_policy_can_sample(self, batch_size):
-        return self.episodes_in_buffer >= batch_size
+        return self.episodes_in_buffer >= batch_size,"{} vs {}".format(self.episodes_in_buffer,batch_size)
 
     def on_policy_sample(self, batch_size):
         assert self.episodes_in_buffer >= batch_size
@@ -270,6 +274,7 @@ class ReplayBuffer(EpisodeBatch):
         return data
 
     def sample(self, batch_size):
+        print(self.episodes_in_buffer,batch_size)
         assert self.on_policy_can_sample(batch_size)
         if self.episodes_in_buffer == batch_size:
             return self[:batch_size]

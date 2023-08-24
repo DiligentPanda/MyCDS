@@ -53,16 +53,16 @@ class EpisodeRunner:
         self.env.reset()
         self.t = 0
 
-    def writereward(self, win_rate, step):
+    def writereward(self, avg_return, win_rate, lose_rate, draw_rate, goal_diff, my_goal, step):
         if os.path.isfile(self.csv_path):
             with open(self.csv_path, 'a+') as f:
                 csv_write = csv.writer(f)
-                csv_write.writerow([step, win_rate])
+                csv_write.writerow([step, avg_return, win_rate, lose_rate, draw_rate, goal_diff, my_goal])
         else:
             with open(self.csv_path, 'w') as f:
                 csv_write = csv.writer(f)
-                csv_write.writerow(['step', 'win_rate'])
-                csv_write.writerow([step, win_rate])
+                csv_write.writerow(['step', 'return', 'win_rate', "lose_rate", "draw_rate"])
+                csv_write.writerow([step, avg_return, win_rate, lose_rate, draw_rate, goal_diff, my_goal])
 
     def run(self, test_mode=False):
         self.reset()
@@ -127,9 +127,13 @@ class EpisodeRunner:
 
         cur_returns.append(episode_return)
         if test_mode and (len(self.test_returns) == self.args.test_nepisode):
-            cur_returns_mean = np.array(
-                [0 if item <= 0 else 1 for item in cur_returns]).mean()
-            self.writereward(cur_returns_mean, self.t_env)
+            win_rate=cur_stats["win"]/cur_stats["n_episodes"]
+            lose_rate=cur_stats["lose"]/cur_stats["n_episodes"]
+            draw_rate=cur_stats["draw"]/cur_stats["n_episodes"]
+            goal_diff=cur_stats["goal_diff"]/cur_stats["n_episodes"]
+            my_goal=cur_stats["my_goal"]/cur_stats["n_episodes"]
+            avg_return=np.mean(cur_returns)
+            self.writereward(avg_return,win_rate,lose_rate,draw_rate,goal_diff,my_goal,self.t_env)
 
         if test_mode and (len(self.test_returns) == self.args.test_nepisode):
             self._log(cur_returns, cur_stats, log_prefix)

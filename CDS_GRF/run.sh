@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python main.py --config=CDS_QMIX --env-config=benchmark_academy_corner

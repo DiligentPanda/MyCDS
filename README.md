@@ -1,3 +1,19 @@
+# CDS QMIX & QPLEX for Google Research Football MARL
+This repo provides our modification of the original CDS implementation for our GRF MARL Benchmark, including new environment settings, feature encoders and reward functions, etc.
+
+## Experiment
+To run the experiments:
+
+```sh
+cd CDS_GRF
+run either tmux_run_qmix.sh or tmux_run_qplex.sh. (You probably need to install tmux first to run all tasks parallely.)
+```
+
+The detailed configurations of each environment is in `/CDS_GRF/config`.
+
+## Contact
+Feel free to leave an issue if you have any questions about this repo. You can also contact current maintainers, [YanSong97](https://github.com/YanSong97) and [DiligentPanda](https://github.com/DiligentPanda), by email.
+
 # CDS: Celebrating Diversity in Shared Multi-Agent Reinforcement Learning
 
 The paper is now available in [arXiv](https://arxiv.org/pdf/2106.02195.pdf) and accepted by NeurIPS 2021. Our approach can help both value-based and policy-based baselines (such as QMIX, QPLEX, and MAPPO) to explore sophisticated strategies for improving learning efficiency in challenging benchmarks.
